@@ -29,6 +29,9 @@ open class HttpRequestSerializer:  RequestSerializer {
     open var cachePolicy: NSURLRequest.CachePolicy
     /// The timeout interval.
     open var timeoutInterval: TimeInterval
+
+    ///Use this property for sending  array of objects
+    public static let arrayParametersKey = "arrayParametersKey"
     
     /// Defualt initializer.
     public init() {

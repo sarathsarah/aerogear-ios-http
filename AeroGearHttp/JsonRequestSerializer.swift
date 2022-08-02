@@ -42,10 +42,14 @@ open class JsonRequestSerializer:  HttpRequestSerializer {
             // set type
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             // set body
-            if (parameters != nil) {
+            if let parameters = parameters {
                 var body: Data?
                 do {
-                    body = try JSONSerialization.data(withJSONObject: parameters!, options: [])
+                    if let arrayOfParam = parameters[JsonRequestSerializer.arrayParametersKey] {
+                        body = try JSONSerialization.data(withJSONObject: arrayOfParam, options: [])
+                    } else {
+                        body = try JSONSerialization.data(withJSONObject: parameters, options: [])
+                    }
                 } catch _ {
                     body = nil
                 }
