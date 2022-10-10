@@ -172,15 +172,24 @@ open class HttpRequestSerializer:  RequestSerializer {
                 let multiData = value as! MultiPartData
                 sectionData = multiData.data as Data
                 sectionType = multiData.mimeType
-                sectionFilename = " filename=\"\(multiData.filename)\""
+                if !multiData.filename.isEmpty {
+                    sectionFilename = " filename=\"\(multiData.filename)\""
+                } else {
+                    sectionDataAsString = multiData.dataValue
+                }
             } else {
                 sectionData = "\(value)".data(using: String.Encoding.utf8)
             }
             
             data.append(prefixData!)
             
-            let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\(sectionFilename)\r\n".data(using: String.Encoding.utf8)
-            data.append(sectionDisposition!)
+            if sectionFilename.isEmpty {
+                let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\r\n".data(using: String.Encoding.utf8)
+                data.append(sectionDisposition!) // added
+            } else {
+                let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\(sectionFilename)\r\n".data(using: String.Encoding.utf8)
+                data.append(sectionDisposition!)
+            }
             
             if let type = sectionType {
                 let contentType = "Content-Type: \(type)\r\n".data(using: String.Encoding.utf8)
@@ -189,7 +198,13 @@ open class HttpRequestSerializer:  RequestSerializer {
             
             // append data
             data.append(seperData!)
-            data.append(sectionData!)
+            if sectionData == nil {
+                if let datastring = "\(sectionDataAsString)".data(using: String.Encoding.utf8) {
+                    data.append(datastring)
+                }
+            } else {
+                data.append(sectionData!)
+            }
             data.append(seperData!)
         }
         
