@@ -30,6 +30,8 @@ open class MultiPartData {
     open var mimeType: String
     /// The actual data to be sent.
     open var data: Data
+    /// User defines parameter to pass different types of data
+    open var dataValue: String
     
     /**
     Initialize a multipart object using an NSURL and a corresponding MIME type. 
@@ -45,6 +47,7 @@ open class MultiPartData {
         self.mimeType = mimeType;
         
         self.data = try! Data(contentsOf: url)
+        self.dataValue = ""
     }
     
     /**
@@ -62,5 +65,25 @@ open class MultiPartData {
         self.name = name;
         self.filename = filename;
         self.mimeType = mimeType;
+        self.dataValue = ""
+    }
+    
+     /**
+    Initialize a multipart object using an NSData plus metadata.
+    
+    :param: data the actual data to be uploaded.
+    :param: name the 'name' to be used on the request.
+    :param: filename the 'filename' to be used on the request.
+    :param: mimeType the 'MIME type' to be used on the request.
+    :param: "datavalue"  is the exact string to be passed on the request
+    
+    :returns: the newly created multipart data.
+    */
+    public init(data: Data, name: String, filename: String, mimeType: String, dataValue: String) {
+        self.data = data;
+        self.name = name;
+        self.filename = filename;
+        self.mimeType = mimeType;
+        self.dataValue = dataValue;
     }
 }
