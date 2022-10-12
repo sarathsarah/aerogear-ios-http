@@ -160,7 +160,7 @@ open class HttpRequestSerializer:  RequestSerializer {
     private func multiPartBodyFrom(httpParams parameters: [String: Any], boundary: String) -> Data {
         let data = NSMutableData()
         
-        let sectionDataAsString = ""
+        var sectionDataAsString = ""
         let prefixData = "--\(boundary)\r\n".data(using: String.Encoding.utf8)
         let seperData = "\r\n".data(using: String.Encoding.utf8)
         
